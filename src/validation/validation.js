@@ -40,8 +40,18 @@ const uservalidation=async function(req,res,next){
         }
         if(!checkPassword(password)) { return res.status(400).send({ status: false, msg: "password should contain at least 1 lowercase, uppercase ,numeric alphabetical character and at least one special character and also The string must be eight characters or longer" }) }        if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,16})/).test(password)) { return res.status(400).send({ status: false, msg: "password should contain at least 1 lowercase, uppercase ,numeric alphabetical character and at least one special character and also The string must be eight characters or longer" }) }
         
-       // if(!address){return res.status(400).send({status:false,message:"Please provide address"})}
-       
+        if(!address){return res.status(400).send({status:false,message:"Please provide address"})}
+        if(typeof address.street==='string' && address.street.trim().length === 0){return res.status(400).send({status:false,message:"street is empty"})}
+        if(typeof address.street !== 'string') {return res.status(400).send({status:false,message:"street should be string"})}
+       // if (!(/^\d+\s[A-z]+\s[A-z]$/).test(address.street)) return res.status(400).send({ status: false, message: " Please enter street as A-Z or a-z" })
+
+        if(typeof address.city==='string' && address.city.trim().length === 0){return res.status(400).send({status:false,message:"city is empty"})}
+        if(typeof address.city !== 'string') {return res.status(400).send({status:false,message:"city should be string"})}
+        if (!(/^[a-zA-Z ]{2,30}$/).test(address.city)) return res.status(400).send({ status: false, message: " Please enter city as A-Z or a-z" })
+
+        if(typeof address.pincode==='string' && address.pincode.trim().length === 0){return res.status(400).send({status:false,message:"pincode is empty"})}
+        if(typeof address.pincode !== 'string') {return res.status(400).send({status:false,message:"pincode should be string"})}
+        if (!(/^(\d{6})$/).test(address.pincode.trim())) { return res.status(400).send({ status: false, message: "Please provide valid pincode" }) }
        
         next()
 
