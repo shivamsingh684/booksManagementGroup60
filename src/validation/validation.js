@@ -1,8 +1,6 @@
 const userModel= require("../Models/userModel")
 const {default :mongoose}=require("mongoose")
 
-
-
 const uservalidation=async function(req,res,next){
     try{
         let data=req.body;
