@@ -4,7 +4,7 @@ const bookModel = require('../models/bookModel');
 const reviewModel = require('../Models/reviewModel')
 const { isValid, isValidName } = require('../validation/validator');
 
-const createBook = async (req, res, next) => {
+const createBook = async (req, res) => {
     try {
         let data = req.body
 
