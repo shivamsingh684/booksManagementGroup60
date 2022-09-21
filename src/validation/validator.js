@@ -4,12 +4,12 @@ const isvalidReqBody=(reqBody)=>{
     return Object.keys(reqBody).length>0
 
 }
-const valid=function(value){
+const valid=(value)=>{
     if(typeof(value)==='undefined'||value===null)return false
     if(typeof(value)==='string'&& value.trim().length==0)return false
     return true
 }
-let isValidTitle = function (title) {
+let isValidTitle =(title)=>{
     return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
 }
 

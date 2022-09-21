@@ -3,7 +3,7 @@ const userModel = require('../models/userModel');
 const bookModel = require('../models/bookModel');
 const {isValid, isValidName} = require('../validation/validator');
 
-const createBook = async (req, res, next) => {
+const createBook = async (req, res) => {
     try {
         let data = req.body
 
