@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const userModel = require('../models/userModel');
+// const userModel = require('../models/userModel');
 const bookModel = require('../models/bookModel');
 const {isValid, isValidName} = require('../validation/validator');
 
-const createBook = async (req, res, next) => {
+const createBook = async (req, res) => {
     try {
         let data = req.body
 
@@ -16,7 +16,7 @@ const createBook = async (req, res, next) => {
         if(!isValid(title)){
             return res.status(400).send({ status: false, message: "Title must be a present"})
         }
-        title = title.trim()
+        // title = title.trim()
         if (!isValidName(title)) {
             return res.status(400).send({
                 status: false,
@@ -63,4 +63,34 @@ const createBook = async (req, res, next) => {
     }
 }
 
-module.exports = {createBook}
+
+
+const getBooks=async function (req,res){
+    let data = req.query
+    let query={isDeleted:false,...data}
+    // const {userId,category,subcategory}=data
+        if (!Object.keys(data).length) {
+            let book = await bookModel.find({ $and: [{ isDeleted: false }] });
+            if (!Object.keys(book).length) {
+                return res.status(404).send({ status: false, msg: "no book exist" });
+            }
+            return res.status(200).send({ status: true, data: book });
+        } else {
+            let book = await bookModel.find(query).select({title:1,excerpt:1,userId:1,reviews:1,category:1,releaseAt:1,_id:1}).sort({title:1});
+            if (!Object.keys(book).length) {
+                return res.status(404).send({ status: false, msg: " No such book exist" });
+            }
+            
+            
+        
+            return res.status(200).send({ status: true,messege:"getbooklists", data: book});
+            // return res.status(200).send({ status: true, list: books });
+           
+        }
+    }
+
+
+
+
+
+module.exports = {createBook,getBooks}
