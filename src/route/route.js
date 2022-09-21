@@ -1,13 +1,16 @@
 const express=require('express')
 const router=express.Router()
 const {createUser,loginUser}=require("../controllers/userController")
-const valid=require("../validation/validation")
+
+const { createBook ,getbookbyid}=require("../controllers/bookController")
 
 
 
-router.post("/register",valid.uservalidation,createUser)
+router.post("/register",createUser)
 router.post("/login",loginUser)
 
+router.post("/books",createBook)
+router.get("/books/:bookId",getbookbyid)
 
 
 module.exports =router
