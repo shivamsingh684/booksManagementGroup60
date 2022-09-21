@@ -73,7 +73,7 @@ let loginUser= async function (req, res) {
 
         let token = jwt.sign(
             {
-                userId:User._id.toString(),
+                userId:user._id.toString(),
                 iat: Math.floor(Date.now() / 1000),
                 exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60,
                 project: 1,
