@@ -26,11 +26,11 @@ const createBook = async (req, res) => {
 
         //userId validation
         if (!validator.valid(userId)) return res.status(400).send({ status: false, message: "UserId is required...!" })
-        if (req.body.hasOwnProperty('userId')) {
-            if (!validator.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "please enter the valid UserId...!" })
+         if (req.body.hasOwnProperty('userId')) {
+        if (!validator.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "please enter the valid UserId...!" })
          }
         let checkUser = await userModel.findById(userId);
-        if (!checkUser) return res.status(404).send({ status: false, message: "author is not found" });
+        if (!checkUser) return res.status(404).send({ status: false, message: "user is not found" });
 
         //ISBN validation
         if (!validator.valid(ISBN)) return res.status(400).send({ status: false, message: "ISBN number is required...!" })
@@ -53,8 +53,9 @@ const createBook = async (req, res) => {
         //releasedAt
         if (!validator.valid(releasedAt)) return res.status(400).send({ status: false, message: "releaseAt is required...!" })
         if (!moment.utc(releasedAt, "YYYY-MM-DD", true).isValid()) return res.status(400).send({ status: false, message: "enter date in valid format eg. (YYYY-MM-DD)...!" })
+        let savedUser={title, excerpt, ISBN, category, reviews, subcategory, releasedAt, userId, isDeleted}
 
-        let saveBook = await bookModel.create(data);
+        let saveBook = await bookModel.create(savedUser);
         return res.status(201).send({ status: true, message: "Success", data: saveBook })
 
 
