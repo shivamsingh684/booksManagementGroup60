@@ -5,7 +5,6 @@ const bookModel = require('../models/bookModel');
 const reviewModel = require('../Models/reviewModel')
 const validator = require('../validation/validator');
 
-
 const createBook = async (req, res) => {
     try {
         let data = req.body
@@ -62,6 +61,41 @@ const createBook = async (req, res) => {
     } catch (err) { return res.status(500).send({ status: false, message: err.message }); }
 }
 
+const getBooks=async function (req,res){
+    try{
+    let data = req.query
+    let query={isDeleted:false,...data}
+    // const {userId,category,subcategory}=data
+        if (!Object.keys(data).length) {
+            let book = await bookModel.find({ $and: [{ isDeleted: false }] });
+            if (!Object.keys(book).length) {
+                return res.status(404).send({ status: false, msg: "no book exist" });
+            }
+            return res.status(200).send({ status: true, data: book });
+        } else {
+            let book = await bookModel.find(query).select({title:1,excerpt:1,userId:1,reviews:1,category:1,releaseAt:1,_id:1}).sort({title:1});
+            if (!Object.keys(book).length) {
+                return res.status(404).send({ status: false, msg: " No such book exist" });
+            }
+            
+            
+        
+            return res.status(200).send({ status: true,messege:"getbooklists", data: book});
+            // return res.status(200).send({ status: true, list: books });
+           
+        }
+    }catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
+    }
+    }
+    
+    
+    
+
+
+
+
+
 
 
 const getbookbyid = async function (req, res) {
@@ -99,4 +133,4 @@ catch (error) {
 }
 
 
-module.exports = { createBook ,getbookbyid}
+module.exports = { createBook ,getbookbyid,getBooks}
