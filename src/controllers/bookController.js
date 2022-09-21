@@ -10,7 +10,7 @@ const createBook = async (req, res) => {
     try {
         let data = req.body
 
-        let { title, excerpt, ISBN, category, reviews, subcategory, releasedAt, userId, isDeleted, bookCover} = data;
+        let { title, excerpt, ISBN, category, reviews, subcategory, releasedAt, userId, isDeleted} = data;
 
 
         if (!validator.isvalidReqBody(data)) return res.status(400).send({ status: false, message: "Please, provide book details to create book...!" })
@@ -54,9 +54,6 @@ const createBook = async (req, res) => {
         if (!validator.valid(releasedAt)) return res.status(400).send({ status: false, message: "releaseAt is required...!" })
         if (!moment.utc(releasedAt, "YYYY-MM-DD", true).isValid()) return res.status(400).send({ status: false, message: "enter date in valid format eg. (YYYY-MM-DD)...!" })
 
-        if (!validator.valid(bookCover)) return res.status(400).send({ status: false, message: "bookCover is required...!" })
-
-    
         let saveBook = await bookModel.create(data);
         return res.status(201).send({ status: true, message: "Success", data: saveBook })
 
