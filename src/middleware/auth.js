@@ -11,7 +11,7 @@ let  token =  req.headers['x-api-key']
   if(!token) 
     return res.send({staus:false,msg:"token is required "})
 
-    let decodedtoken =  jwt.verify(token,"Blog")
+    let decodedtoken =  jwt.verify(token,"functionUp-project3")
     req.decoded = decodedtoken
 
     if(!decodedtoken) 

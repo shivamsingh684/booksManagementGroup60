@@ -2,7 +2,7 @@ const express=require('express')
 const router=express.Router()
 const {createUser,loginUser}=require("../controllers/userController")
 
-const { createBook,getBooks ,getbookbyid,deleted}=require("../controllers/bookController")
+const {createBook ,getbookbyid,getBooks,updateBook,deleted}=require("../controllers/bookController")
 
 const{authn,authz}=require('../middleware/auth')
 
@@ -14,8 +14,11 @@ router.post("/login",loginUser)
 router.post("/books",authn,createBook)
 router.get("/getbooks",authn,getBooks)
 router.get("/books/:bookId",authn,getbookbyid)
-router.put("/books/:bookId", authn,createBook)
 
-router.delete("/books/:bookId",deleted)
+
+
+router.put("/books/:bookId", authn,authz,updateBook)
+
+router.delete("/books/:bookId",authn,authz,deleted)
 
 module.exports =router

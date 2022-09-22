@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const moment=require('moment')
 const userModel= require("../Models/userModel")
-const bookModel = require('../models/bookModel');
+const bookModel = require('../Models/bookModel');
 const reviewModel = require('../Models/reviewModel')
 const validator = require('../validation/validator');
+const today = moment();
 
 
 
@@ -137,7 +138,7 @@ const updateBook = async (req, res) => {
         let data = req.body;
         let bookId = req.params.bookId;
 
-        if (!mongoose.isValidObjectId(bookId)){
+        if (!validator.isValidObjectId(bookId)){
             return res.status(400).send({ Status: false, message: "Please enter valid bookId" });
         }
         const { title, excerpt, ISBN } = data;
