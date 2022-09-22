@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 mongoose
   .connect(
-    "mongodb+srv://manaskumar:iFVJhjYrsH7iars8@cluster0.s4pqkzd.mongodb.net/group60DataBase?retryWrites=true&w=majority",
+    "mongodb+srv://root:1234@suyashshendre.wfinbwt.mongodb.net/group60Database?retryWrites=true&w=majority",
     {
       useNewUrlParser: true, 
     }
