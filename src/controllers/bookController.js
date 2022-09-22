@@ -132,7 +132,57 @@ catch (error) {
 }
 }
 
+const updateBook = async (req, res) => {
+    try {
+        let data = req.body;
+        let bookId = req.params.bookId;
 
+        if (!mongoose.isValidObjectId(bookId)){
+            return res.status(400).send({ Status: false, message: "Please enter valid bookId" });
+        }
+        const { title, excerpt, ISBN } = data;
+
+        if (!validator.isvalidReqBody(data)) return res.status(400).send({ status: false, message: "Please, provide book details to update book...!" })
+
+        //title validatation
+        if (!validator.valid(title) || !validator.regexSpaceChar(title)) return res.status(400).send({ status: false, message: "book title is required in valid format...!" });
+        let checkTitle = await bookModel.findOne({ title: title });
+        if (checkTitle) return res.status(400).send({ status: false, message: " Book title is already exist" })
+
+        //ISBN validation
+        if (!validator.valid(ISBN)) return res.status(400).send({ status: false, message: "ISBN number is required...!" })
+        if (!validator.isbnRegex(ISBN)) return res.status(400).send({ status: false, message: "enter the valid isbn number...!" })
+        let checkISBN = await bookModel.findOne({ ISBN: ISBN, isDeleted: false })
+        if (checkISBN) return res.status(400).send({ status: false, message: "book with same ISBN is already present...!" })
+
+        let findbook = await bookModel.findById(bookId);
+        if (!findbook){
+            return res.status(404).send({ message: "bookId is invalid" });
+        }
+
+        if (findbook.isDeleted){
+            return res.status(404).send({ message: "Bookdata is already deleted" });
+        }
+
+        if (!findbook.isDeleted) {
+            let updatedBook = await bookModel.findOneAndUpdate(
+                { _id: bookId },
+                {
+                    $set: {
+                        title: title,
+                        excerpt: excerpt,
+                        ISBN: ISBN,
+                        releasedAt: today.format("YYYY-MM-DD"),
+                    },
+                },
+                { new: true }
+            );
+            return res.status(200).send({ status: true, message: updatedBook });
+        }
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message });
+    }
+}
 
 const deleted = async function (req, res) {
     try {
@@ -159,4 +209,4 @@ const deleted = async function (req, res) {
     }
 }
 
-module.exports = { createBook ,getbookbyid,getBooks,deleted}
+module.exports = { createBook ,getbookbyid,getBooks,updateBook,deleted}
