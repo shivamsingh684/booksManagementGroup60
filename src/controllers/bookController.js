@@ -5,6 +5,11 @@ const bookModel = require('../models/bookModel');
 const reviewModel = require('../Models/reviewModel')
 const validator = require('../validation/validator');
 
+
+
+
+
+
 const createBook = async (req, res) => {
     try {
         let data = req.body
@@ -89,12 +94,6 @@ const getBooks=async function (req,res){
     }
     
     
-    
-
-
-
-
-
 
 
 const getbookbyid = async function (req, res) {
@@ -132,4 +131,30 @@ catch (error) {
 }
 
 
-module.exports = { createBook ,getbookbyid,getBooks}
+
+const deleted = async function (req, res) {
+    try {
+    
+        
+        let bookId = req.params.bookId
+       
+        if(!validator.isValidObjectId(bookId)) return res.status(400).send({status: false, msg: "invalid bookId"})
+
+        let book = await bookModel.findById(bookId)
+        if (!validator.valid(book)) {
+            return res.status(404).send({ status: false, msg: "book not found" })
+        }
+        if (book.isDeleted == true) {
+            return res.status(404).send({ status: false, msg: "this book is already deleted" })
+        }
+        if (book.isDeleted == false) {
+            let deletetion = await bookModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: new Date() } })
+            return res.status(200).send({ status: true, msg: "book is deleted successfully" })
+        }
+    }
+    catch (error) {
+        return res.status(500).send({ status: false, msg: error.message })
+    }
+}
+
+module.exports = { createBook ,getbookbyid,getBooks,deleted}
