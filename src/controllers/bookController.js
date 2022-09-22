@@ -8,6 +8,7 @@ const validator = require('../validation/validator');
 const createBook = async (req, res) => {
     try {
         let data = req.body
+        
 
         let { title, excerpt, ISBN, category, reviews, subcategory, releasedAt, userId, isDeleted} = data;
 
