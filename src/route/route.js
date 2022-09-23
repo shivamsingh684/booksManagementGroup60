@@ -6,21 +6,41 @@ const {createBook ,getbookbyid,getBooks,updateBook,deleted}=require("../controll
 
 const{authn,authz}=require('../middleware/auth')
 
-const{createReview}=require("../controllers/reviewController")
+const{createReview,updateReview}=require("../controllers/reviewController")
+
+
+//--------------------⭐User Apis⭐--------------------//
 
 
 router.post("/register",createUser)
 router.post("/login",loginUser)
 
+
+
+//--------------------⭐Book apis⭐--------------------//
+
+
+
+
 router.post("/books",authn,createBook)
+
 router.get("/getbooks",authn,getBooks)
+
 router.get("/books/:bookId",authn,getbookbyid)
 
-
-
-router.post("/books/:bookId/review",createReview)
 router.put("/books/:bookId", authn,authz,updateBook)
 
 router.delete("/books/:bookId",authn,authz,deleted)
+
+
+
+//--------------------⭐Review Apis⭐--------------------//
+
+
+router.post("/books/:bookId/review",createReview)
+
+router.put("/books/:bookId/review/:reviewId",updateReview)
+
+
 
 module.exports =router
