@@ -81,7 +81,6 @@ let loginUser= async function (req, res) {
             },
             "functionUp-project3"
         );
-        console.log(token);
         res.status(201).send({ status: true, data: { token } });
     } catch (err) {
         res.status(500).send({ msg: "Error", msg: err.message })
