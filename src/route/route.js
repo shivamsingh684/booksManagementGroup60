@@ -24,7 +24,7 @@ router.post("/login",loginUser)
 
 router.post("/books",authn,createBook)
 
-router.get("/getbooks",authn,getBooks)
+router.get("/books",authn,getBooks)
 
 router.get("/books/:bookId",authn,getbookbyid)
 

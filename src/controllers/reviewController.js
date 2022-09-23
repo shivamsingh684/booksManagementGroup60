@@ -58,6 +58,7 @@ const updateReview=async function(req,res){
     if (!validator.isvalidReqBody(data)) return res.status(400).send({ status: false, message: "Please, provide  details to update review book...!" })
     if(!validator.isValidObjectId(bookId)) return res.status(400).send({status:false,message:"book id is not valid"})
     let book = await bookModel.findById(bookId)
+
     if (!validator.valid(book))  return res.status(404).send({ status: false, msg: "book not found" })
     
     if(!validator.isValidObjectId(reviewId)) return res.status(400).send({status:false,message:"review id is not valid"})
@@ -67,11 +68,12 @@ const updateReview=async function(req,res){
         return res.status(400).send({ status: false, message: "rating should be between 1 to 5" })
     }
     let update=await reviewModel.findOneAndUpdate({_id:reviewId},{$set:{reviewedBy:reviewedBy,rating:rating,review:review},},{new:true}).select({ isDeleted: 0, __v: 0 })
-     return res.status(200).send({status: true, msg: "blog updated successfuly", data: update})
+     return res.status(200).send({status: true, message: "blog updated successfuly", data: update})
     
 }
 
 const deleteBookReview = async function (req, res) {
+  try{
   let bookId = req.params.bookId;
   let reviewId = req.params.reviewId;
 
@@ -100,11 +102,11 @@ const deleteBookReview = async function (req, res) {
   let countReviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).count();
   let updatedBookData = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { reviews: countReviews } }, { new: true, upsert: true });
 
-  return res.status(200).send({
-    status: true, message: 'Success', Data: {
-      UpdatedBookData: updatedBookData,
-      deletedReviewData: deletedReviewData
-    }
-  })
+  return res.status(200).send({status: true, message: 'review is successfully deleted'})
 }
+catch(error){
+  res.status(500).send({status:false,message:error.message})
+}
+}
+
 module.exports = {createReview,updateReview,deleteBookReview}
