@@ -1,5 +1,6 @@
 const jwt=require('jsonwebtoken')
 const bookModel=require('../Models/bookModel')
+const validator=require('../validation/validator')
 
 //------------------⭐Authentication⭐--------------//
 
@@ -19,24 +20,45 @@ let  token =  req.headers['x-api-key']
 
     next()
 }catch(err){
-    res.status(500).send({msg:err.message})
+    res.status(500).send({message:err.message})
 } 
 }
 
 //--------------------⭐Authorization⭐--------------------//
 
 let authz = async (req,res,next)=>{
+  try{
+
+let loginPerson = req.decoded.userId;
   
-   let bookData = await bookModel.findById(req.params.bookId); 
-   if(!bookData) return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
-
-
-
-
-if(req.decoded.userId !=bookData.userId)
-return res.status(403).send({staus:false,msg:"you are not authorized"})
+  let userLogging;
+  
+  
+      /**validation for path params */
+      if (req.params.hasOwnProperty('bookId')) {
+        if (!validator.isValidObjectId(req.params.bookId))return res.status(400).send({ status: false, msg: "Enter a valid book Id" }) 
+  
+        let bookData = await bookModel.findById(req.params.bookId);        
+  
+        if (!bookData)                                          //you entering the author id here of any othor author
+          return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
+  
+        userLogging = bookData.userId.toString();
+    
+  
+      }
+  
+       if (loginPerson !== userLogging)
+        return res.status(403).send({ status: false, msg: "Error, authorization failed" });
+        
 
 next()
+    }
+    catch(error){
+      res.status(500).send({status:false, message:error.message})
+
+
+    }
 }
 
 

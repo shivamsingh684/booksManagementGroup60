@@ -6,7 +6,7 @@ const {createBook ,getbookbyid,getBooks,updateBook,deleted}=require("../controll
 
 const{authn,authz}=require('../middleware/auth')
 
-const{review}=require("../controllers/reviewController")
+const{createReview}=require("../controllers/reviewController")
 
 
 router.post("/register",createUser)
@@ -18,7 +18,7 @@ router.get("/books/:bookId",authn,getbookbyid)
 
 
 
-router.post("/books/:bookId/review",review)
+router.post("/books/:bookId/review",createReview)
 router.put("/books/:bookId", authn,authz,updateBook)
 
 router.delete("/books/:bookId",authn,authz,deleted)
