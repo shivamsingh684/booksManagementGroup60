@@ -13,6 +13,9 @@ let  token =  req.headers['x-api-key']
     return res.send({staus:false,msg:"token is required "})
 
     let decodedtoken =  jwt.verify(token,"functionUp-project3")
+    if (Date.now() > (decoded.exp) * 1000) {
+      return res.status(440).send({ status: false, message: "Session expired! Please login again." })
+    }
     req.decoded = decodedtoken
 
     if(!decodedtoken) 
