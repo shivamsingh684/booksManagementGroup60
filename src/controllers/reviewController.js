@@ -49,6 +49,7 @@ const createReview = async function (req, res) {
     }
 }
 const updateReview=async function(req,res){
+  try{
     let bookId=req.params.bookId
     let reviewId=req.params.reviewId
     let data=req.body
@@ -59,7 +60,7 @@ const updateReview=async function(req,res){
     if(!validator.isValidObjectId(bookId)) return res.status(400).send({status:false,message:"book id is not valid"})
     let book = await bookModel.findById(bookId)
 
-    if (!validator.valid(book))  return res.status(404).send({ status: false, msg: "book not found" })
+    if (!book) return res.status(404).send({ status: false, msg: "book not found" })
     
     if(!validator.isValidObjectId(reviewId)) return res.status(400).send({status:false,message:"review id is not valid"})
     let reviews = await reviewModel.findById(reviewId)
@@ -69,7 +70,10 @@ const updateReview=async function(req,res){
     }
     let update=await reviewModel.findOneAndUpdate({_id:reviewId},{$set:{reviewedBy:reviewedBy,rating:rating,review:review},},{new:true}).select({ isDeleted: 0, __v: 0 })
      return res.status(200).send({status: true, message: "blog updated successfuly", data: update})
-    
+  }
+  catch(error){
+    res.status(500).send({status:false,message:error.message})
+  } 
 }
 
 const deleteBookReview = async function (req, res) {
