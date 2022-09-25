@@ -108,6 +108,10 @@ const getbookbyid = async function (req, res) {
         if (!findId) { return res.status(404).send({ status: false, message: "bookId not found" }) }
 
         const reviewdata = await reviewModel.find({ bookId:findId._id, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+        if(!reviewdata){
+            return res.status(404).send({ status: false, message: "reviewData is not found" }) 
+            
+        }
 
 
         const bookdetails = {
@@ -181,7 +185,7 @@ const updateBook = async (req, res) => {
             return res.status(200).send({ status: true, message :"update sucsessfully",data: updatedBook });
         }
     } catch (error) {
-        res.status(500).send({ status: false, error: error.message });
+        res.status(500).send({ status: false, message: error.message });
     }
 }
 

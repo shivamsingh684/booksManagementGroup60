@@ -30,17 +30,22 @@ const createReview = async function (req, res) {
 
          const reviewedData = { bookId, reviewedBy, reviewedAt: new Date(), rating, review }
 
-        //review
-        if (review == undefined)
-            delete reviewedData.review
+        let addReviewData = await reviewModel.create(reviewedData);
+        let countReviews = await reviewModel
+          .find({ bookId: bookId, isDeleted: false })
+          .count();
+        let updatedBookData = await bookModel.findOneAndUpdate(
+          { _id: bookId },
+          { $set: { reviews: countReviews } },
+          { new: true }
+        );
 
-        let saveReview = await reviewModel.create(reviewedData)
-        let obj = saveReview.toObject();
-        delete obj.isDeleted;
-        delete obj.__v;
+        let responseData = {
+          updatedBookDocument: updatedBookData,
+          reviewsData: addReviewData,
+        };
 
-        await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: 1 } })
-        return res.status(201).send({ status: true, message: "Review given successfully", data: obj })
+        return res.status(201).send({ status: true, message: "Review given successfully", data:responseData})
 
     }
 
